@@ -4,6 +4,8 @@
  * @author Gökhan Kaya <0x90kh4n@gmail.com>
  */
 
+defined('gDesk') or die();
+
 define('BASE_URL', 'http://localhost/gdesk/');
 define('TIMEZONE', 'Europe/Istanbul');
 
