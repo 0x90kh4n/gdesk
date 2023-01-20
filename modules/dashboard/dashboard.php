@@ -6,4 +6,6 @@
 
 defined('gDesk') or die();
 
+global $pdo, $csrf_token;
+
 echo 'Hello world!';

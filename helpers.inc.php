@@ -38,3 +38,25 @@ function load_module($module = null) {
 function show_404() {
     exit(http_response_code(404));
 }
+
+// Csrf token
+function csrf_token($key = 'csrf_token') {
+    if (empty($_SESSION[$key])) {
+        $_SESSION[$key] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION[$key];
+}
+
+// Csrf protection
+function csrf_protection($key = 'csrf_token') {
+    if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+        return false;
+    }
+
+    if (empty($_POST[$key]) || empty($_SESSION[$key]) ||
+        $_POST[$key] !== $_SESSION[$key]
+    ) {
+        exit(http_response_code(403));
+    }
+}

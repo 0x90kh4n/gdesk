@@ -19,24 +19,28 @@ session_start([
 ]);
 
 // Autoload
-spl_autoload_register(function ($className) {
-    $classFile = 'libraries/' . $className . '.php';
+spl_autoload_register(function ($class) {
+    $class = 'libraries/' . $class . '.php';
 
-    if (file_exists($classFile)) {
-        require_once $classFile;
+    if (file_exists($class)) {
+        require_once $class;
     }
 });
 
 // Config
-require_once 'config.inc.php';
+require_once __DIR__ . '/config.inc.php';
 
-// Default date time zone
+// Default timezone
 if (date_default_timezone_get() !== DATE_TIMEZONE) {
     date_default_timezone_set(DATE_TIMEZONE);
 }
 
 // Helper functions
-require_once 'helpers.inc.php';
+require_once __DIR__ . '/helpers.inc.php';
+
+// CSRF
+$csrf_token = csrf_token();
+csrf_protection();
 
 // Database
 $pdo = db_connection();
