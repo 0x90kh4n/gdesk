@@ -14,7 +14,7 @@ error_reporting(
 // Session start
 session_start([
     'name' => 'gDesk',
-    'cookie_lifetime' => 60 * 60 * 24 * 365, // 365 days,
+    'cookie_lifetime' => 60 * 60 * 24 * 365, // 365 days
     'cookie_httponly' => 1
 ]);
 
