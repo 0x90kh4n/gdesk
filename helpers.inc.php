@@ -25,7 +25,17 @@ function db_connection() {
 
 // Load module
 function load_module($module = null) {
-    $module = 'modules/' . ($module ?: DEFAULT_MODULE) . '.php';
+    $module = $module ?: DEFAULT_MODULE;
+
+    $allowedModules = str_replace(
+        ['modules/', '.php'], '', glob('modules/*/*.php')
+    );
+
+    if (!in_array($module, $allowedModules)) {
+        show_404();
+    }
+
+    $module = 'modules/' . $module . '.php';
 
     if (!file_exists($module)) {
         show_404();
