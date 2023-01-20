@@ -22,3 +22,19 @@ function db_connection() {
 
     return $pdo;
 }
+
+// Load module
+function load_module($module = null) {
+    $module = 'modules/' . ($module ?: DEFAULT_MODULE) . '.php';
+
+    if (!file_exists($module)) {
+        show_404();
+    }
+
+    include $module;
+}
+
+// 404 error page
+function show_404() {
+    exit(http_response_code(404));
+}

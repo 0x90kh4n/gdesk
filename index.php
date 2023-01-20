@@ -40,3 +40,6 @@ require_once 'helpers.inc.php';
 
 // Database
 $pdo = db_connection();
+
+// Load module
+load_module($_GET['module'] ?? null);

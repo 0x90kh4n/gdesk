@@ -8,6 +8,7 @@ defined('gDesk') or die();
 
 define('BASE_URL', 'http://localhost/gdesk/');
 define('DATE_TIMEZONE', 'Europe/Istanbul');
+define('DEFAULT_MODULE', 'dashboard/dashboard');
 
 // Database
 define('DB_HOST', 'localhost');
