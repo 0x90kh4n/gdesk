@@ -37,3 +37,6 @@ if (date_default_timezone_get() !== DATE_TIMEZONE) {
 
 // Helper functions
 require_once 'helpers.inc.php';
+
+// Database
+$pdo = db_connection();
