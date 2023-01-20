@@ -21,6 +21,6 @@ define('SMTP_USER', 'noreply@yourdomain.com');
 define('SMTP_PASS', 'password');
 define('SMTP_PORT', '25');
 
-// Google reCaptcha
+// reCaptcha
 define('RECAPTCHA_SITE_KEY', '');
 define('RECAPTCHA_SECRET_KEY', '');
