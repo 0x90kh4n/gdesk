@@ -192,3 +192,107 @@ function curl_http_request($url, array $post = []) {
 
     return $response;
 }
+
+function image_resize($file, int $width, int $height, $crop = false, $save = null, $quality = 75) {
+    if (!is_file($file)) {
+        return false;
+    }
+
+    if (($info = getimagesize($file)) === false) {
+        return false;
+    }
+
+    list($image_width, $image_height, $image_type) = $info;
+
+    if ($image_type == IMAGETYPE_JPEG) {
+        $image = imagecreatefromjpeg($file);
+    } elseif ($image_type == IMAGETYPE_PNG) {
+        $image = imagecreatefrompng($file);
+    } elseif ($image_type == IMAGETYPE_GIF) {
+        $image = imagecreatefromgif($file);
+    } elseif ($image_type == IMAGETYPE_WEBP) {
+        $image = imagecreatefromwebp($file);
+    } else {
+        return false;
+    }
+
+    if ($width <= 0) $width = $image_width;
+    if ($height <= 0) $height = $image_height;
+
+    $x = $y = 0;
+
+    if ($crop) {
+
+        $w = $image_height * $width / $height;
+        $h = $image_width * $height / $width;
+
+        if ($w > $image_width) {
+            $y = ($image_height - $h) / 2;
+            $image_height = $h;
+        } else {
+            $x = ($image_width - $w) / 2;
+            $image_width = $w;
+        }
+
+    } else {
+
+        $ratio = $image_width / $image_height;
+
+        if ($width / $height > $ratio) {
+            $width = $height * $ratio;
+        } else {
+            $height = $width / $ratio;
+        }
+
+    }
+
+    $image_old = $image;
+    $image = imagecreatetruecolor($width, $height);
+
+    // if ($image_type == IMAGETYPE_PNG || $image_type == IMAGETYPE_WEBP) {
+    //     imagealphablending($image, false);
+    //     imagesavealpha($image, true);
+    //     $background = imagecolorallocatealpha($image, 255, 255, 255, 127);
+    //     imagecolortransparent($image, $background);
+    // }
+
+    $background = imagecolorallocate($image, 255, 255, 255);
+    imagefill($image, 0, 0, $background);
+
+    imagecopyresampled($image, $image_old, 0, 0, $x, $y, $width, $height, $image_width, $image_height);
+    imagedestroy($image_old);
+
+    if ($save) {
+
+        $extension = pathinfo($save, PATHINFO_EXTENSION);
+        $extension = strtolower($extension);
+
+        if ($extension == 'jpg' || $extension == 'jpeg') {
+            imagejpeg($image, $save, $quality);
+        } elseif ($extension == 'png') {
+            imagepng($image, $save);
+        } elseif ($extension == 'gif') {
+            imagegif($image, $save);
+        } elseif ($extension == 'webp') {
+            imagewebp($image, $save);
+        }
+
+    } else {
+
+        header('Content-Type: ' . image_type_to_mime_type($image_type));
+
+        if ($image_type == IMAGETYPE_JPEG) {
+            imagejpeg($image, null, $quality);
+        } elseif ($image_type == IMAGETYPE_PNG) {
+            imagepng($image);
+        } elseif ($image_type == IMAGETYPE_GIF) {
+            imagegif($image);
+        } elseif ($image_type == IMAGETYPE_WEBP) {
+            imagewebp($image);
+        }
+
+    }
+
+    imagedestroy($image);
+    return true;
+}
