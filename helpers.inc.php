@@ -6,6 +6,19 @@
 
 defined('gDesk') or die();
 
+// XSS filter
+function xss_clean($data) {
+    if (is_array($data)) {
+        return array_map('xss_clean', $data);
+    }
+
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+
+    return $data;
+}
+
 // Database connection
 function db_connection() {
     try {
